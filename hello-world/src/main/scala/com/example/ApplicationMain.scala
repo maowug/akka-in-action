@@ -1,6 +1,7 @@
 package com.example
 
 import akka.actor.ActorSystem
+import akka.actor.Inbox
 import akka.actor.Props
 import com.example.PingActorWatcher.Watch
 import scala.concurrent.Await
@@ -10,8 +11,11 @@ object ApplicationMain extends App {
   val system = ActorSystem("MyActorSystem")
   val pingActor = system.actorOf(PingActor.props, "pingActor")
   
+  
   val watcherSystem = ActorSystem("MyWatcherActorSystem")
   val pingActorWatcher = watcherSystem.actorOf(PingActorWatcher.props, "pingActorWatcher")
+  
+  
   pingActorWatcher ! Watch(pingActor)
   
   pingActor ! PingActor.Initialize

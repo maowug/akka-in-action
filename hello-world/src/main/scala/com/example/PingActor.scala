@@ -26,6 +26,7 @@ class PingActor extends Actor with ActorLogging {
     case PongActor.PongMessage(text) =>
       log.info("In PingActor - received message: {}", text)
       counter += 1
+      Thread.sleep(1000)
       if (counter == 3) context.system.terminate() // system.terminate()
       else sender() ! PingMessage("ping")
   }
