@@ -1,6 +1,7 @@
 package com.example
 
 import akka.actor.ActorSystem
+import akka.actor.Props
 import com.example.PingActorWatcher.Watch
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
