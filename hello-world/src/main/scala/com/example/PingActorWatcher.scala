@@ -15,16 +15,33 @@ class PingActorWatcher extends Actor with ActorLogging {
     case Watch(sb) =>
       context.watch(sb)
       log.info(s"PingActorWatcher watched $sb")
-    case Terminated(_) =>
-      log.info("PingActorWatcher receive Terminated")
-      context.system.terminate()
-      log.info("PingActorWatcher system terminate")
+
+    case WatchDead(sb) =>
+      context.watch(sb)
+      log.info(s"PingActorWatcher watched dead $sb")
+      
+    case Terminated(tg) =>
+      log.info(s"PingActorWatcher receive($count) Terminated of $tg ")
+      
+      val newWatcherAfterDead = context.system.actorOf(PingActorWatcher.props, s"newWatcherAfterDead$count")
+      newWatcherAfterDead ! WatchDead(tg)
+  
+      count = count + 1
+      
+      if (count == 2) {
+        context.system.terminate()
+        log.info("PingActorWatcher system terminate")
+      }
       
   }
 }
 
 object PingActorWatcher {
+  
+  var count = 0
+  
   val props = Props[PingActorWatcher]
   
   case class Watch(sb: ActorRef)
+  case class WatchDead(sb: ActorRef)
 }
