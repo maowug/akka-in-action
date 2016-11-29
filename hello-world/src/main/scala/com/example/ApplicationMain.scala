@@ -12,15 +12,21 @@ object ApplicationMain extends App {
   val pingActor = system.actorOf(PingActor.props, "pingActor")
   
   
-  val watcherSystem = ActorSystem("MyWatcherActorSystem")
-  val pingActorWatcher = watcherSystem.actorOf(PingActorWatcher.props, "pingActorWatcher")
+//  val watcherSystem = ActorSystem("MyWatcherActorSystem")
+//  val pingActorWatcher = watcherSystem.actorOf(PingActorWatcher.props, "pingActorWatcher")
+//
+//
+//  pingActorWatcher ! Watch(pingActor)
+//
+//  pingActor ! PingActor.Initialize
+  
+//  //  system.awaitTermination()
+//  Await.result(system.whenTerminated, Duration.Inf)
+//  Await.result(watcherSystem.whenTerminated, Duration.Inf)
   
   
-  pingActorWatcher ! Watch(pingActor)
+  val  dummyActor = system.actorOf(DummyActor.props, "dummyActor")
+  dummyActor ! "something"
   
-  pingActor ! PingActor.Initialize
-  
-  //  system.awaitTermination()
   Await.result(system.whenTerminated, Duration.Inf)
-  Await.result(watcherSystem.whenTerminated, Duration.Inf)
 }
